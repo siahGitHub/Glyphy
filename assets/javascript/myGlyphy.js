@@ -17,27 +17,40 @@ function displayGlyphyInfo() {
   $.ajax({
     url: queryURL,
     method: "GET"
-  }).then(function(response) {
+  }).then(function (response) {
     console.log(response);
     // YOUR CODE GOES HERE!!!
     var results = response.data;
 
-        for (var i = 0; i < results.length; i++) {
-          var glyphDiv = $("<div class='item'>");
+    for (var i = 0; i < results.length; i++) {
+      var glyphDiv = $("<div class='item'>");
 
-          var rating = results[i].rating;
+      var rating = results[i].rating;
 
-          var p = $("<p>").text("Rating: " + rating);
+      var p = $("<a>").text("Rating: " + rating);
 
-          var newImage = $("<img>");
-          newImage.attr("src", results[i].images.fixed_height_still.url);
+      var newImage = $("<img>");
+      newImage.attr("id", "img" + i);
+      newImage.addClass("clickable");
+      newImage.attr("src", results[i].images.fixed_width_small_still.url);
+      newImage.attr("src2", results[i].images.preview_gif.url);
 
-          glyphDiv.prepend(p);
-          glyphDiv.prepend(newImage);
+      glyphDiv.prepend(p);
+      glyphDiv.prepend(newImage);
 
-          $("#glyphies-view").prepend(glyphDiv);
-          console.log(results);
-        }
+
+      $("#glyphies-view").prepend(glyphDiv);
+
+      // This function handles events where the glyphy image is clicked
+      $(".clickable").on("click", function (event) {
+        event.preventDefault();
+        var previewGif = $(this).attr("src2");
+        var gif = $(this).attr("src");
+        $(this).attr("src",previewGif);
+        $(this).attr("src2", gif);
+      });
+        console.log(results);
+      }
   });
 
 }
